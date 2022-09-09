@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: resource-limits-burstable
+spec:
+ containers:
+   - name: resource-limits
+     image: nginx
+     ports:
+     - containerPort: 80
+     resources:
+        requests:
+          cpu: "100m"
+          memory: "256Mi"
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
