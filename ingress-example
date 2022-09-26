@@ -1,0 +1,152 @@
+Ingress:
+	- An API object that manages external access to the services in a cluster.
+	- May provide
+	   - load balancing
+	   - SSL termination
+	   - Name based virtual hosting
+
+Install ingress controller:
+  - kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml
+
+Get nginx controller endpoint:
+  - kubectl get svc -n ingress-nginx ingress-nginx-controller
+
+Deploy the backend services:
+
+vi backend-ingress.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: account
+spec:
+ replicas: 3
+ template:
+  metadata:
+   labels:
+    app: account
+  spec:
+   containers:
+   - name: acc
+     image: hashicorp/http-echo
+     args:
+     - "-text=account service"
+ selector:
+  matchLabels:
+   app: account
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: cart
+spec:
+ replicas: 3
+ template:
+  metadata:
+   labels:
+    app: cart
+  spec:
+   containers:
+   - name: cart
+     image: hashicorp/http-echo
+     args:
+     - "-text=cart service"
+ selector:
+  matchLabels:
+   app: cart
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: payment
+spec:
+ replicas: 3
+ template:
+  metadata:
+   labels:
+    app: payment
+  spec:
+   containers:
+   - name: pay
+     image: hashicorp/http-echo
+     args:
+     - "-text=payment service"
+ selector:
+  matchLabels:
+   app: payment
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: account
+spec:
+  selector:
+    app: account
+  ports:
+  - port: 5678
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: payment
+spec:
+  selector:
+    app: payment
+  ports:
+  - port: 5678
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: cart
+spec:
+  selector:
+    app: cart
+  ports:
+  - port: 5678
+
+
+Create Ingress:
+
+# vi ingress.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata: 
+ name: eshop-ingress
+ annotations: 
+  kubernetes.io/ingress.class: "nginx"
+spec: 
+ rules: 
+ - http:
+    paths: 
+    - path: /cart
+      pathType: Prefix
+      backend: 
+       service: 
+        name: cart
+        port: 
+         number: 5678
+    - path: /account
+      pathType: Prefix
+      backend: 
+       service: 
+        name: account
+        port: 
+         number: 5678
+    - path: /payment
+      pathType: Prefix
+      backend: 
+       service: 
+        name: payment
+        port: 
+         number: 5678
+
+Verify the Ingress:
+
+Browse the application on any node on the cluster
+
+http://localhost:<ingress-controller-Port>/accounts 
+http://localhost:<ingress-controller-Port>/cart 
+http://localhost:<ingress-controller-Port>/orders
