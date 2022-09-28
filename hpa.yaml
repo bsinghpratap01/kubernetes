@@ -1,0 +1,27 @@
+# Create a deployment
+
+# vi bhanu-dep.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver
+  labels:
+    app: nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: web
+        image: bsingh01/my-apache2:v1
+        ports:
+        - containerPort: 80
+        
+        
