@@ -1,0 +1,40 @@
+# Create a deployment with record 
+# kubectl create -f depone.yaml --record=true
+# kubectl expose deployment hello-deploy --record=true
+# kubectl rollout status deployment hello-deploy
+
+# kubectl rollout history deployment hello-deploy
+
+
+# vi deployment-with-stategy.yaml
+
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: hello-deploy
+spec:
+  replicas: 10
+  selector:
+     matchLabels:
+        app: hello-world
+  minReadySeconds: 10
+  strategy:
+     type: RollingUpdate
+     rollingUpdate:
+        maxUnavailable: 1
+        maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hello-pod
+        image: lovelearnlinux/webserver:v1
+        ports:
+        - containerPort: 80        
+
+
+
+# kubectl set image deploy/hello-deploy hello-pod=lovelearnlinux/webserver:v2 --annotation=update image from v1 to v2
+# kubectl set image deployment/frontend www=image:v2 --record=true
