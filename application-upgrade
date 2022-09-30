@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: hello-pod
-        image: lovelearnlinux/webserver:v1
+        image: bsingh01/my-apache2:v1
         ports:
         - containerPort: 80        
 
