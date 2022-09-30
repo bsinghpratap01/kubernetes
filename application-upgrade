@@ -34,7 +34,21 @@ spec:
         ports:
         - containerPort: 80        
 
+# vi strategy-dep-svc.yaml
 
+apiVersion: v1
+kind: Service
+metadata:
+    name: strategy-svc
+spec:
+   selector:
+       app: hello-world
+   ports:
+     - name: http
+       port: 80
+       targetPort: 80
+       protocol: TCP
+       
 
 # kubectl set image deploy/hello-deploy hello-pod=lovelearnlinux/webserver:v2 --annotation=update image from v1 to v2
 # kubectl set image deployment/frontend www=image:v2 --record=true
