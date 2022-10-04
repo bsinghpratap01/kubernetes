@@ -1,0 +1,3 @@
+# kubectl config set-context --current --namespace=dev
+# kubectl config view --minify |grep -i namespace
+# kubectl config get-contexts
