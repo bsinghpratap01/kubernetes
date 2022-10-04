@@ -1,3 +1,59 @@
 # kubectl config set-context --current --namespace=dev
 # kubectl config view --minify |grep -i namespace
 # kubectl config get-contexts
+
+Before removing any namespace verify objects within it.
+
+# kubectl get all
+# kubectl get all --namespace=dev
+
+# Kubectl get namespaces
+# kubectl delete namespace dev
+
+vi dev-quota.yaml
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+   name: dev-quota
+spec:
+  hard:
+    requests.cpu: 1
+    requests.memory: 1Gi
+    limits.cpu: 2
+    limits.memory: 2Gi
+    
+    
+    # kubectl create -f dev-quota.yaml --namespace=dev
+    
+    We can also define namespaace in YAML.
+    
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+   name: dev-quota
+   namespace: dev
+spec:
+  hard:
+    requests.cpu: 1
+    requests.memory: 1Gi
+    limits.cpu: 2
+    limits.memory: 2Gi
+    
+    # vi prod-object-quota.yaml
+    
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+   name: prod-quota
+   namespace: prod
+spec:
+  hard:
+    configmaps: "8"
+    persistentvolumeclaims: "4"
+    pods: "3"
+    replicationcontrollers: "4"
+    secrets: "10"
+    services: "10"
+    services.loadbalancers: "2"
+    
