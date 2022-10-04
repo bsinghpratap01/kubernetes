@@ -57,3 +57,7 @@ spec:
     services: "10"
     services.loadbalancers: "2"
     
+    
+   # kubectl get quota --namespace=prod
+   # kubectl describe quota prod-quota --namespace=prod
+    
