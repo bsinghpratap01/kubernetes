@@ -40,12 +40,12 @@ spec:
     limits.cpu: 2
     limits.memory: 2Gi
     
-    # vi prod-object-quota.yaml
+# vi prod-object-quota.yaml
     
 apiVersion: v1
 kind: ResourceQuota
 metadata:
-   name: prod-quota
+   name: prod-object-quota
    namespace: prod
 spec:
   hard:
@@ -60,4 +60,31 @@ spec:
     
    # kubectl get quota --namespace=prod
    # kubectl describe quota prod-quota --namespace=prod
+   
+   Check all quota applied on a namespace.
+   
+   # kubectl describe quota --namespace=prod
+   
+   Create a pod with cpu and memory limit inside the "prod" namespace.
+   
+   # vi pod-with-limits.yaml
+   
+   apiVersion: v1
+   kind: Pod
+   metadata:
+      name: pod-with-limits
+      namespace: prod
+   spec:
+      containers:
+              - name: my-container
+                image: nginx
+                resources:
+                    requests:
+                        cpu: "0.5"
+                        memory: "300Mi"
+                    limits:
+                        cpu: "1"
+                        memory: "500Mi"
+                     
+   
     
