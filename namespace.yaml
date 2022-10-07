@@ -4,6 +4,7 @@
 
 Before removing any namespace verify objects within it.
 
+# kubectl get namespaces --show-labels
 # kubectl get all
 # kubectl get all --namespace=dev
 
