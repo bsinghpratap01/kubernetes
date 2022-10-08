@@ -76,7 +76,7 @@ metadata:
 spec:
   podSelector:
       matchLabels:
-          app: webpod
+          app: webprod
   policyTypes:
     - Ingress
   ingress:
