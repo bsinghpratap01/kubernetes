@@ -19,3 +19,50 @@ spec:
         - protocol: TCP
           port: 8080
 
+
+# vi net-pol-allow-port-8080-from-another-namespace-for-all-pods.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prod-net-policy2
+  namespace: prod
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+     - from:
+          - namespaceSelector:
+               matchLabels:
+                    area: test
+            podSelector: {}
+       ports:
+        - protocol: TCP
+          port: 8080
+
+vi net-pol-allow-port-8080-from-another-namespace-for-specific-pod.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prod-net-policy3
+  namespace: prod
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+     - from:
+          - namespaceSelector:
+               matchLabels:
+                    area: dev
+            podSelector:
+               matchLabels:
+                  app: webdev 
+       ports:
+        - protocol: TCP
+          port: 8080
+
+# Note - Pod label should be unique in dev namespace.
+
